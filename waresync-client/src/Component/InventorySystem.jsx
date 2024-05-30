@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 
 function Inventory() {
   const [price, setPrice] = useState(0);
@@ -45,13 +46,25 @@ function Inventory() {
     setSum(newTotal);
   };
 
-  function refreshPage() {
-    window.location.reload();
-  }
+  const handleCompleteOrder = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:4000/complete-order",
+        { users }
+      );
+      if (response.status === 200) {
+        console.log("Order completed:", users);
+        setUsers([]);
+        setTotal(0);
+      }
+    } catch (error) {
+      console.error("Error completing order:", error);
+    }
+  };
 
   return (
     <div className="container-fluid bg-2 text-center">
-      <h1>WARE SYNC SYSTEM TECHNOLOGIES</h1>
+      <h1>FROST WARE HOUSE SYSTEM TECHNOLOGIES</h1>
       <br />
       <div className="row">
         <div className="col-sm-8">
@@ -110,7 +123,7 @@ function Inventory() {
                 <td>
                   <button
                     className="btn btn-success"
-                    type="submit"
+                    type="button"
                     onClick={Calculation}
                   >
                     Add
@@ -156,7 +169,7 @@ function Inventory() {
             <button
               type="button"
               className="btn btn-success"
-              onClick={refreshPage}
+              onClick={handleCompleteOrder}
             >
               Complete Order
             </button>
